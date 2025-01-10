@@ -1,7 +1,11 @@
 import bcrypt
 
 from ..domains.user import UserLogin
-from ..exceptions.service.user import LoginIsNotUniqueException
+from ..exceptions.service.user import (
+    LoginIsNotUniqueException,
+    LoginAuthException,
+    PasswordAuthException,
+)
 from ..repositories.user import UserRepository
 
 
@@ -15,6 +19,10 @@ class UserService:
             raise LoginIsNotUniqueException
 
     @staticmethod
+    def _validate_password(password: str, hashed_password: str) -> bool:
+        return bcrypt.checkpw(password.encode(), hashed_password.encode())
+
+    @staticmethod
     def _hash_password(password: str) -> str:
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         return hashed_password.decode()
@@ -23,3 +31,10 @@ class UserService:
         await self._validate_login(user_login.login)
         user_login.password = self._hash_password(user_login.password)
         await self._repository.save_into_db(user_login)
+
+    async def validate_user(self, user_login: UserLogin) -> None:
+        founded_user_login = await self._repository.get_user_login(user_login.login)
+        if user_login is None:
+            raise LoginAuthException
+        if not self._validate_password(user_login.password, founded_user_login.password):
+            raise PasswordAuthException
