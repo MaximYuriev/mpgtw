@@ -1,4 +1,4 @@
-from ..domains.user import UserLogin
+from ..dto.user import UserLoginDTO
 from ..schemas.user import CreateUserSchema
 from ..services.user import UserService
 
@@ -11,7 +11,7 @@ class UserAdapter:
             self,
             create_user_schema: CreateUserSchema,
     ) -> None:
-        user_login = UserLogin(
+        user_login = UserLoginDTO(
             login=create_user_schema.login,
             password=create_user_schema.password,
         )

@@ -1,6 +1,6 @@
 import bcrypt
 
-from ..domains.user import UserLogin
+from ..dto.user import UserLoginDTO
 from ..exceptions.service.user import (
     LoginIsNotUniqueException,
     LoginAuthException,
@@ -27,12 +27,12 @@ class UserService:
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         return hashed_password.decode()
 
-    async def create_user(self, user_login: UserLogin) -> None:
+    async def create_user(self, user_login: UserLoginDTO) -> None:
         await self._validate_login(user_login.login)
         user_login.password = self._hash_password(user_login.password)
         await self._repository.save_into_db(user_login)
 
-    async def validate_user(self, user_login: UserLogin) -> None:
+    async def validate_user(self, user_login: UserLoginDTO) -> None:
         founded_user_login = await self._repository.get_user_login(user_login.login)
         if user_login is None:
             raise LoginAuthException

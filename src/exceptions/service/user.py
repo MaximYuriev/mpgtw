@@ -7,7 +7,7 @@ from .base import ServiceException
 class LoginIsNotUniqueException(ServiceException):
     @property
     def message(self):
-        return "Логин не уникальный!"
+        return "Логин уже зарегистрирован в системе!"
 
 
 @dataclass
