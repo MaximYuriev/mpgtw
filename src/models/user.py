@@ -1,7 +1,7 @@
 import uuid
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..models.base import Base
 
@@ -18,3 +18,5 @@ class UserModel(Base):
     role_id: Mapped[int] = mapped_column(ForeignKey(RoleModel.role_id), default=1)  # Роль "пользователь"
     login: Mapped[str]
     password: Mapped[str]
+
+    role: Mapped["RoleModel"] = relationship()

@@ -14,7 +14,7 @@ class UserService:
         self._repository = repository
 
     async def _validate_login(self, login: str) -> None:
-        user = await self._repository.get_user_login(login)
+        user = await self._repository.get_user_by_login(login)
         if user is not None:
             raise LoginIsNotUniqueException
 
@@ -33,8 +33,8 @@ class UserService:
         await self._repository.save_into_db(user_login)
 
     async def validate_user(self, user_login: UserLoginDTO) -> None:
-        founded_user_login = await self._repository.get_user_login(user_login.login)
-        if user_login is None:
+        founded_user = await self._repository.get_user_by_login(user_login.login)
+        if founded_user is None:
             raise LoginAuthException
-        if not self._validate_password(user_login.password, founded_user_login.password):
+        if not self._validate_password(user_login.password, founded_user.password):
             raise PasswordAuthException
