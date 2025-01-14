@@ -8,6 +8,7 @@ __all__ = (
     "POSTGRES_USER",
     "PRIVATE_KEY_PATH",
     "PUBLIC_KEY_PATH",
+    "COOKIE_KEY_NAME",
 )
 
 from .config import (
@@ -18,5 +19,6 @@ from .config import (
     POSTGRES_USER,
     PRIVATE_KEY_PATH,
     PUBLIC_KEY_PATH,
+    COOKIE_KEY_NAME,
 )
 from .db import db_url, async_session
