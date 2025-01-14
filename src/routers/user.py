@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..adapters.user import UserAdapter
 from ..dependencies.user import get_user_adapter
-from ..exceptions.service.user import LoginIsNotUniqueException
+from ..exceptions.user import LoginIsNotUniqueException
 from ..schemas.response import BaseResponse
 from ..schemas.user import CreateUserSchema
 

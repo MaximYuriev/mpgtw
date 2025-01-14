@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from .base import ServiceException
+from .base import ApplicationException
 
 
-class UserException(ServiceException):
+class UserException(ApplicationException):
     pass
 
 
