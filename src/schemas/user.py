@@ -9,3 +9,8 @@ class CreateUserSchema(BaseModel):
     password: Annotated[str, MinLen(8), MaxLen(20)]
     firstname: Annotated[str, MinLen(3), MaxLen(15)]
     lastname: Annotated[str, MinLen(3), MaxLen(15)]
+
+
+class UserLoginSchema(BaseModel):
+    login: str
+    password: str
