@@ -32,7 +32,7 @@ class TokenRepository:
         self._session.add(refresh_token_model)
         await self._session.commit()
 
-    async def get_token(self, user_id: uuid.UUID) -> RefreshTokenDTO:
+    async def get_token(self, user_id: uuid.UUID | str) -> RefreshTokenDTO:
         refresh_token_model = await self._get_token_model(user_id=user_id)
         return RefreshTokenDTO(
             refresh_token=refresh_token_model.refresh_token,
