@@ -1,6 +1,6 @@
 import bcrypt
 
-from ..dto.user import UserLoginDTO
+from ..dto.user import UserLoginDTO, UserDTO
 from ..exceptions.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository
 
@@ -28,9 +28,10 @@ class UserService:
         user_login.password = self._hash_password(user_login.password)
         await self._repository.save_into_db(user_login)
 
-    async def validate_user(self, user_login: UserLoginDTO) -> None:
+    async def validate_user(self, user_login: UserLoginDTO) -> UserDTO:
         founded_user = await self._repository.get_user_by_login(user_login.login)
         if founded_user is None:
             raise LoginAuthException
         if not self._validate_password(user_login.password, founded_user.password):
             raise PasswordAuthException
+        return founded_user
