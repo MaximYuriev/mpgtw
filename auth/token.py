@@ -1,26 +1,43 @@
 import jwt
 
 from config import PRIVATE_KEY_PATH, PUBLIC_KEY_PATH
-from .payloads import BasePayload
+from auth.payloads import BasePayload
+from auth.exceptions import AuthTokenInvalidException, AuthTokenExpiredException
 
 
 class JWT:
-    _CRYPT_ALGORITHM = 'RS256'
+    __CRYPT_ALGORITHM = 'RS256'
+    __PUBLIC_KEY = PUBLIC_KEY_PATH.read_text()
+    __PRIVATE_KEY = PRIVATE_KEY_PATH.read_text()
 
-    @staticmethod
+    @classmethod
     def create_jwt(
+            cls,
             payload: BasePayload,
-            private_key: str = PRIVATE_KEY_PATH.read_text(),
-            algorithm: str = _CRYPT_ALGORITHM,
     ):
         token_data = payload.__dict__
-        return jwt.encode(token_data, private_key, algorithm=algorithm)
+        return jwt.encode(
+            token_data,
+            cls.__PRIVATE_KEY,
+            algorithm=cls.__CRYPT_ALGORITHM
+        )
 
-    @staticmethod
+    @classmethod
     def parse_jwt(
+            cls,
             token: str,
-            public_key: str = PUBLIC_KEY_PATH.read_text(),
-            algorithm: str = _CRYPT_ALGORITHM,
             verify_signature: bool = True
     ):
-        return jwt.decode(token, public_key, algorithms=[algorithm], options={"verify_signature": verify_signature})
+        try:
+            return jwt.decode(
+                token,
+                cls.__PUBLIC_KEY,
+                algorithms=[cls.__CRYPT_ALGORITHM],
+                options={
+                    "verify_signature": verify_signature,
+                }
+            )
+        except jwt.ExpiredSignatureError:
+            raise AuthTokenExpiredException
+        except jwt.InvalidTokenError:
+            raise AuthTokenInvalidException
