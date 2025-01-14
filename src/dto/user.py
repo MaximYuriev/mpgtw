@@ -12,7 +12,7 @@ class UserDTO(AbstractUserDTO):
     id: uuid.UUID
     login: str
     password: str
-    role: str | None = None
+    role: str
 
 
 @dataclass
