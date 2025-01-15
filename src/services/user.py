@@ -1,6 +1,6 @@
 import bcrypt
 
-from ..adapters.broker import UserBrokerAdapter
+from ..adapters.user.broker import UserBrokerAdapter
 from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO
 from ..exceptions.application.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository

@@ -1,6 +1,6 @@
-from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO
-from ..schemas.user import CreateUserSchema, UserLoginSchema
-from ..services.user import UserService
+from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO
+from src.schemas.user import CreateUserSchema, UserLoginSchema
+from src.services.user import UserService
 
 
 class UserAdapter:

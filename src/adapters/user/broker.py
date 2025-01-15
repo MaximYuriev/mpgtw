@@ -1,6 +1,6 @@
-from ..dto.user import UserInfoToBrokerDTO
-from ..publisher.user import UserPublisher
-from ..schemas.user import UserInfoToBrokerSchema
+from src.dto.user import UserInfoToBrokerDTO
+from src.publisher.user import UserPublisher
+from src.schemas.user import UserInfoToBrokerSchema
 
 
 class UserBrokerAdapter:

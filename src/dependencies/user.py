@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import async_session
-from ..adapters.user import UserAdapter
+from ..adapters.user.service import UserAdapter
 from ..services.user import UserService
 from ..repositories.user import UserRepository
 

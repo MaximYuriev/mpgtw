@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from ..adapters.user import UserAdapter
+from ..adapters.user.service import UserAdapter
 from ..dependencies.user import get_user_adapter
 from ..exceptions.application.user import LoginIsNotUniqueException
 from ..exceptions.http.user import HTTPLoginIsNotUniqueException
