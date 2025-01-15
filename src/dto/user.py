@@ -25,3 +25,8 @@ class UserLoginDTO(AbstractUserDTO):
 class UserInfoDTO(AbstractUserDTO):
     firstname: str
     lastname: str
+
+
+@dataclass
+class UserInfoToBrokerDTO(UserInfoDTO):
+    id: uuid.UUID

@@ -1,4 +1,4 @@
-from ..dto.user import UserLoginDTO, UserDTO
+from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO
 from ..schemas.user import CreateUserSchema, UserLoginSchema
 from ..services.user import UserService
 
@@ -15,7 +15,11 @@ class UserAdapter:
             login=create_user_schema.login,
             password=create_user_schema.password,
         )
-        await self._service.create_user(user_login)
+        user_info = UserInfoDTO(
+            firstname=create_user_schema.firstname,
+            lastname=create_user_schema.lastname,
+        )
+        await self._service.create_user(user_login, user_info)
 
     async def validate_user(
             self,

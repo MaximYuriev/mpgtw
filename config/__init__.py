@@ -1,5 +1,6 @@
 __all__ = (
     "db_url",
+    "rabbit_url",
     "async_session",
     "POSTGRES_DB",
     "POSTGRES_PASSWORD",
@@ -22,3 +23,4 @@ from .config import (
     COOKIE_KEY_NAME,
 )
 from .db import db_url, async_session
+from .rabbit import rabbit_url

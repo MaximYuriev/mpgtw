@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,10 +26,11 @@ class UserRepository:
         )
         return await self._session.scalar(query)
 
-    async def save_into_db(self, user_login: UserLoginDTO) -> None:
+    async def save_into_db(self, user_login: UserLoginDTO) -> uuid.UUID:
         user_login_model = self._dto_to_model(user_login)
         self._session.add(user_login_model)
         await self._session.commit()
+        return user_login_model.user_id
 
     async def get_user_by_login(self, login: str) -> UserDTO | None:
         user_model = await self._get_user_model(login=login)

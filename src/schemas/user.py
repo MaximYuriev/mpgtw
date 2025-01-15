@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 
 from annotated_types import MinLen, MaxLen
@@ -14,3 +15,9 @@ class CreateUserSchema(BaseModel):
 class UserLoginSchema(BaseModel):
     login: str
     password: str
+
+
+class UserInfoToBrokerSchema(BaseModel):
+    user_id: uuid.UUID
+    firstname: str
+    lastname: str
