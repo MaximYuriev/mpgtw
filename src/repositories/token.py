@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..dto.token import RefreshTokenDTO
-from ..exceptions.token import TokenNotFoundException
+from ..exceptions.application.token import TokenNotFoundException
 from ..models.token import RefreshTokenModel
 
 

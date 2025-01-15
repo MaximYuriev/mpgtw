@@ -1,7 +1,7 @@
 import bcrypt
 
 from ..dto.user import UserLoginDTO, UserDTO
-from ..exceptions.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
+from ..exceptions.application.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository
 
 

@@ -26,7 +26,7 @@ class JWT:
     def parse_jwt(
             cls,
             token: str,
-            verify_signature: bool = True
+            verify_expire: bool = True
     ):
         try:
             return jwt.decode(
@@ -34,7 +34,7 @@ class JWT:
                 cls.__PUBLIC_KEY,
                 algorithms=[cls.__CRYPT_ALGORITHM],
                 options={
-                    "verify_signature": verify_signature,
+                    "verify_exp": verify_expire,
                 }
             )
         except jwt.ExpiredSignatureError:
