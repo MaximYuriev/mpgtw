@@ -18,3 +18,6 @@ COOKIE_KEY_NAME = os.environ.get("COOKIE_KEY_NAME")
 
 RMQ_USER = os.environ.get("RMQ_USER")
 RMQ_PASS = os.environ.get("RMQ_PASS")
+
+USER_SERVICE_URL = "http://localhost:8004"
+USER_SERVICE_GET_USER_INFO_URL = f'{USER_SERVICE_URL}/user'

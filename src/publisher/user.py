@@ -10,7 +10,7 @@ class UserPublisher:
         name="user",
     )
     _QUEUE = RabbitQueue(
-        name="user-info"
+        name="user-info-create"
     )
     _ROUTING_KEY = "info"
 

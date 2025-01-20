@@ -1,5 +1,6 @@
+from src.dto.cookie import CookieDTO
 from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO
-from src.schemas.user import CreateUserSchema, UserLoginSchema
+from src.schemas.user import CreateUserSchema, UserLoginSchema, UserInfoSchema
 from src.services.user import UserService
 
 
@@ -30,3 +31,10 @@ class UserAdapter:
             password=user_login_schema.password,
         )
         return await self._service.validate_user(user_login)
+
+    async def get_user_info(
+            self,
+            cookies: CookieDTO,
+    ) -> UserInfoSchema:
+        user_info = await self._service.get_user_info(cookies)
+        return UserInfoSchema(**user_info.__dict__)

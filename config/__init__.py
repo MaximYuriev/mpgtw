@@ -10,6 +10,8 @@ __all__ = (
     "PRIVATE_KEY_PATH",
     "PUBLIC_KEY_PATH",
     "COOKIE_KEY_NAME",
+    "USER_SERVICE_URL",
+    "USER_SERVICE_GET_USER_INFO_URL",
 )
 
 from .config import (
@@ -21,6 +23,8 @@ from .config import (
     PRIVATE_KEY_PATH,
     PUBLIC_KEY_PATH,
     COOKIE_KEY_NAME,
+    USER_SERVICE_URL,
+    USER_SERVICE_GET_USER_INFO_URL,
 )
 from .db import db_url, async_session
 from .rabbit import rabbit_url

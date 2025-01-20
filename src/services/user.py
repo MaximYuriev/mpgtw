@@ -1,13 +1,16 @@
 import bcrypt
 
 from ..adapters.user.broker import UserBrokerAdapter
+from ..dto.cookie import CookieDTO
 from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO
 from ..exceptions.application.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository
+from ..senders.user import UserServiceHttpSender
 
 
 class UserService:
     broker_adapter = UserBrokerAdapter
+    http_sender = UserServiceHttpSender
 
     def __init__(self, repository: UserRepository):
         self._repository = repository
@@ -36,7 +39,7 @@ class UserService:
         user_info_to_broker = UserInfoToBrokerDTO(
             firstname=user_info.firstname,
             lastname=user_info.lastname,
-            id = user_id
+            id=user_id
         )
         await self._publish_user_info(user_info_to_broker)
 
@@ -47,3 +50,6 @@ class UserService:
         if not self._validate_password(user_login.password, founded_user.password):
             raise PasswordAuthException
         return founded_user
+
+    async def get_user_info(self, authorization_cookies: CookieDTO) -> UserInfoDTO:
+        return await self.http_sender.get_user_info(authorization_cookies)
