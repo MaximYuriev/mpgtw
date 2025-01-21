@@ -2,7 +2,7 @@ import bcrypt
 
 from ..adapters.user.broker import UserBrokerAdapter
 from ..dto.cookie import CookieDTO
-from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO
+from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO, UpdateUserInfoDTO
 from ..exceptions.application.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository
 from ..senders.user import UserServiceHttpSender
@@ -29,9 +29,6 @@ class UserService:
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         return hashed_password.decode()
 
-    async def _publish_user_info(self, user_info: UserInfoToBrokerDTO) -> None:
-        await self.broker_adapter.publish(user_info)
-
     async def create_user(self, user_login: UserLoginDTO, user_info: UserInfoDTO) -> None:
         await self._validate_login(user_login.login)
         user_login.password = self._hash_password(user_login.password)
@@ -41,7 +38,7 @@ class UserService:
             lastname=user_info.lastname,
             id=user_id
         )
-        await self._publish_user_info(user_info_to_broker)
+        await self.broker_adapter.publish_create_user_info(user_info_to_broker)
 
     async def validate_user(self, user_login: UserLoginDTO) -> UserDTO:
         founded_user = await self._repository.get_user_by_login(user_login.login)
@@ -53,3 +50,6 @@ class UserService:
 
     async def get_user_info(self, authorization_cookies: CookieDTO) -> UserInfoDTO:
         return await self.http_sender.get_user_info(authorization_cookies)
+
+    async def update_user_info(self, updated_user_info: UpdateUserInfoDTO) -> None:
+        await self.broker_adapter.publish_update_user_info(updated_user_info)

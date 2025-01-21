@@ -1,7 +1,9 @@
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from authorizer.http.dependencies import get_user_id_from_token
 from ..adapters.user.service import UserAdapter
 from ..dependencies.user import get_user_adapter
 from ..dependencies.auth import get_auth_cookie
@@ -10,7 +12,7 @@ from ..exceptions.application.user import LoginIsNotUniqueException
 from ..exceptions.http.user import HTTPLoginIsNotUniqueException
 from ..exceptions.http.sender import HttpSenderRequestException
 from ..schemas.response import BaseResponse, UserResponse
-from ..schemas.user import CreateUserSchema
+from ..schemas.user import CreateUserSchema, EditUserInfoSchema
 
 user_router = APIRouter(prefix="/user", tags=["User"])
 
@@ -45,8 +47,13 @@ async def get_user_info(
 
 
 @user_router.patch("/edit/info")
-async def edit_user_info():
-    pass
+async def edit_user_info(
+        user_info_schema: EditUserInfoSchema,
+        user_id: Annotated[uuid.UUID, Depends(get_user_id_from_token)],
+        user_adapter: Annotated[UserAdapter, Depends(get_user_adapter)],
+):
+    await user_adapter.update_user_info(user_id, user_info_schema)
+    return BaseResponse(detail="Данные в скором времени будут изменены!")
 
 
 @user_router.patch("/edit/login")

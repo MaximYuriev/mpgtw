@@ -1,9 +1,9 @@
 import uuid
 from abc import ABC
-from typing import Annotated
+from typing import Annotated, Self
 
 from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 
 class BaseUserSchema(BaseModel, ABC):
@@ -31,3 +31,19 @@ class UserInfoToBrokerSchema(BaseUserSchema):
     user_id: uuid.UUID
     firstname: str
     lastname: str
+
+
+class UpdateUserInfoToBrokerSchema(UserInfoToBrokerSchema):
+    firstname: str | None = None
+    lastname: str | None = None
+
+
+class EditUserInfoSchema(UserInfoSchema):
+    firstname: str | None = None
+    lastname: str | None = None
+
+    @model_validator(mode="after")
+    def validate_not_empty_class(self) -> Self:
+        if self.firstname is None and self.lastname is None:
+            raise ValueError("Тело запроса не может быть пустым!")
+        return self

@@ -1,5 +1,7 @@
+import uuid
+
 from src.dto.cookie import CookieDTO
-from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO
+from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UpdateUserInfoDTO
 from src.schemas.user import CreateUserSchema, UserLoginSchema, UserInfoSchema
 from src.services.user import UserService
 
@@ -38,3 +40,15 @@ class UserAdapter:
     ) -> UserInfoSchema:
         user_info = await self._service.get_user_info(cookies)
         return UserInfoSchema(**user_info.__dict__)
+
+    async def update_user_info(
+            self,
+            user_id: uuid.UUID,
+            user_info_schema: UserInfoSchema,
+    ) -> None:
+        update_user_info_data = user_info_schema.model_dump()
+        update_user_info = UpdateUserInfoDTO(
+            id=user_id,
+            **update_user_info_data
+        )
+        await self._service.update_user_info(update_user_info)

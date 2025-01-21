@@ -30,3 +30,10 @@ class UserInfoDTO(AbstractUserDTO):
 @dataclass
 class UserInfoToBrokerDTO(UserInfoDTO):
     id: uuid.UUID
+
+
+@dataclass
+class UpdateUserInfoDTO(UserInfoDTO):
+    id: uuid.UUID
+    firstname: str | None
+    lastname: str | None
