@@ -1,8 +1,8 @@
 import jwt
 
 from config import PRIVATE_KEY_PATH, PUBLIC_KEY_PATH
-from auth.payloads import BasePayload
-from auth.exceptions import AuthTokenInvalidException, AuthTokenExpiredException
+from .payloads import BasePayload
+from .exceptions import AuthTokenInvalidException, AuthTokenExpiredException
 
 
 class JWT:

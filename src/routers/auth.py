@@ -2,13 +2,14 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response
 
+from authorizer.http.dependencies import get_token_from_cookie
+from authorizer.http.exceptions import HTTPAuthException, HTTPTokenInvalidException
 from config import COOKIE_KEY_NAME
 from ..exceptions.application.user import AuthException
 from ..exceptions.application.token import TokenInvalidException
-from ..exceptions.http.auth import HTTPAuthException, HTTPTokenInvalidException
 from ..adapters.user.service import UserAdapter
 from ..dependencies.user import get_user_adapter
-from ..dependencies.auth import get_auth_service, get_token_from_cookie
+from ..dependencies.auth import get_auth_service
 from ..services.auth import AuthService
 from ..schemas.user import UserLoginSchema
 from ..schemas.response import BaseResponse

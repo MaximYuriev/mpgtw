@@ -1,8 +1,8 @@
 import uuid
 
-from auth.payloads import AccessPayload, RefreshPayload, BasePayload
-from auth.token import JWT
-from auth.exceptions import AuthTokenInvalidException, AuthTokenExpiredException
+from authorizer.auth.payloads import AccessPayload, RefreshPayload, BasePayload
+from authorizer.auth.token import JWT
+from authorizer.auth.exceptions import AuthTokenInvalidException, AuthTokenExpiredException
 from ..dto.token import RefreshTokenDTO
 from ..exceptions.application.token import TokenNotFoundException, TokenExpiredException, TokenInvalidException
 from ..dto.user import UserDTO
