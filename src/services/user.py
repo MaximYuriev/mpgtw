@@ -2,7 +2,7 @@ import bcrypt
 
 from ..adapters.user.broker import UserBrokerAdapter
 from ..dto.cookie import CookieDTO
-from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO, UpdateUserInfoDTO
+from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO, UpdateUserInfoDTO, UpdateUserLoginDTO
 from ..exceptions.application.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from ..repositories.user import UserRepository
 from ..senders.user import UserServiceHttpSender
@@ -53,3 +53,10 @@ class UserService:
 
     async def update_user_info(self, updated_user_info: UpdateUserInfoDTO) -> None:
         await self.broker_adapter.publish_update_user_info(updated_user_info)
+
+    async def update_user_login(self, updated_user_login: UpdateUserLoginDTO) -> None:
+        if updated_user_login.login is not None:
+            await self._validate_login(updated_user_login.login)
+        if updated_user_login.password is not None:
+            updated_user_login.password = self._hash_password(updated_user_login.password)
+        await self._repository.update_user(updated_user_login)

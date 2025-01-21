@@ -1,7 +1,7 @@
 import uuid
 
 from src.dto.cookie import CookieDTO
-from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UpdateUserInfoDTO
+from src.dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UpdateUserInfoDTO, UpdateUserLoginDTO
 from src.schemas.user import CreateUserSchema, UserLoginSchema, UserInfoSchema
 from src.services.user import UserService
 
@@ -52,3 +52,15 @@ class UserAdapter:
             **update_user_info_data
         )
         await self._service.update_user_info(update_user_info)
+
+    async def update_user_login(
+            self,
+            user_id: uuid.UUID,
+            user_login_schema: UserLoginSchema,
+    ) -> None:
+        update_user_login_data = user_login_schema.model_dump()
+        update_user_login = UpdateUserLoginDTO(
+            id=user_id,
+            **update_user_login_data,
+        )
+        await self._service.update_user_login(update_user_login)

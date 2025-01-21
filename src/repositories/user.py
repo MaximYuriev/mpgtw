@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..dto.user import UserLoginDTO, AbstractUserDTO, UserDTO
+from ..dto.user import UserLoginDTO, AbstractUserDTO, UserDTO, UpdateUserLoginDTO
 from ..models.user import UserModel
 
 
@@ -41,3 +41,11 @@ class UserRepository:
                 password=user_model.password,
                 role=user_model.role.role_name,
             )
+
+    async def update_user(self, updated_user_login: UpdateUserLoginDTO):
+        user_model = await self._get_user_model(user_id=updated_user_login.id)
+        for key, value in updated_user_login.__dict__.items():
+            if key == "id" or value is None:
+                continue
+            setattr(user_model, key, value)
+        await self._session.commit()

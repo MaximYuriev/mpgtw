@@ -12,7 +12,7 @@ from ..exceptions.application.user import LoginIsNotUniqueException
 from ..exceptions.http.user import HTTPLoginIsNotUniqueException
 from ..exceptions.http.sender import HttpSenderRequestException
 from ..schemas.response import BaseResponse, UserResponse
-from ..schemas.user import CreateUserSchema, EditUserInfoSchema
+from ..schemas.user import CreateUserSchema, EditUserInfoSchema, EditUserLoginSchema
 
 user_router = APIRouter(prefix="/user", tags=["User"])
 
@@ -57,5 +57,14 @@ async def edit_user_info(
 
 
 @user_router.patch("/edit/login")
-async def edit_user_login():
-    pass
+async def edit_user_login(
+        user_login_schema: EditUserLoginSchema,
+        user_id: Annotated[uuid.UUID, Depends(get_user_id_from_token)],
+        user_adapter: Annotated[UserAdapter, Depends(get_user_adapter)],
+):
+    try:
+        await user_adapter.update_user_login(user_id, user_login_schema)
+    except LoginIsNotUniqueException as exc:
+        raise HTTPLoginIsNotUniqueException(exc.message)
+    else:
+        return BaseResponse(detail="Данные успешно изменены!")

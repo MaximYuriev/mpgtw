@@ -47,3 +47,14 @@ class EditUserInfoSchema(UserInfoSchema):
         if self.firstname is None and self.lastname is None:
             raise ValueError("Тело запроса не может быть пустым!")
         return self
+
+
+class EditUserLoginSchema(UserLoginSchema):
+    login: str | None = None
+    password: str | None = None
+
+    @model_validator(mode="after")
+    def validate_not_empty_class(self) -> Self:
+        if self.login is None and self.password is None:
+            raise ValueError("Тело запроса не может быть пустым!")
+        return self

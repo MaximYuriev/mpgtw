@@ -37,3 +37,10 @@ class UpdateUserInfoDTO(UserInfoDTO):
     id: uuid.UUID
     firstname: str | None
     lastname: str | None
+
+
+@dataclass
+class UpdateUserLoginDTO(UserLoginDTO):
+    id: uuid.UUID
+    login: str | None
+    password: str | None
