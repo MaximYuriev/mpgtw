@@ -7,7 +7,7 @@ from ..schemas.user import UserInfoToBrokerSchema, UpdateUserInfoToBrokerSchema
 
 class UserPublisher:
     _EXCHANGE = RabbitExchange(
-        name="user",
+        name="user"
     )
     _CREATE_USER_INFO_QUEUE = RabbitQueue(
         name="user-info-create"
@@ -15,42 +15,42 @@ class UserPublisher:
     _UPDATE_USER_INFO_QUEUE = RabbitQueue(
         name="user-info-update"
     )
-    _ROUTING_KEY = "info"
 
     @classmethod
     async def _declare_exchange(cls, broker: RabbitBroker) -> None:
         await broker.declare_exchange(cls._EXCHANGE)
 
     @classmethod
-    async def _declare_queue(cls, broker: RabbitBroker, queue: RabbitQueue) -> None:
+    async def _declare_queue(cls, broker: RabbitBroker, queue: RabbitQueue) -> RobustQueue:
         queue = await broker.declare_queue(queue)
         await cls._bind_queue_to_exchange(queue)
+        return queue
 
     @classmethod
     async def _bind_queue_to_exchange(cls, queue: RobustQueue) -> None:
         await queue.bind(
             exchange=cls._EXCHANGE.name,
-            routing_key=cls._ROUTING_KEY
+            routing_key=queue.name,
         )
 
     @classmethod
-    async def _publish(cls, broker: RabbitBroker, user_info: UserInfoToBrokerSchema):
+    async def _publish(cls, broker: RabbitBroker, queue: RobustQueue, user_info: UserInfoToBrokerSchema):
         await broker.publish(
             message=user_info,
             exchange=cls._EXCHANGE,
-            routing_key=cls._ROUTING_KEY
+            routing_key=queue.name,
         )
 
     @classmethod
     async def publish_create_user_info(cls, user_info: UserInfoToBrokerSchema) -> None:
         async with RabbitBroker(rabbit_url) as broker:
             await cls._declare_exchange(broker)
-            await cls._declare_queue(broker, cls._CREATE_USER_INFO_QUEUE)
-            await cls._publish(broker, user_info)
+            queue = await cls._declare_queue(broker, cls._CREATE_USER_INFO_QUEUE)
+            await cls._publish(broker, queue, user_info)
 
     @classmethod
     async def publish_update_user_info(cls, update_user_info: UpdateUserInfoToBrokerSchema) -> None:
         async with RabbitBroker(rabbit_url) as broker:
             await cls._declare_exchange(broker)
-            await cls._declare_queue(broker, cls._UPDATE_USER_INFO_QUEUE)
-            await cls._publish(broker, update_user_info)
+            queue = await cls._declare_queue(broker, cls._UPDATE_USER_INFO_QUEUE)
+            await cls._publish(broker, queue, update_user_info)
