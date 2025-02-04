@@ -5,6 +5,8 @@ from typing import Annotated, Self
 from annotated_types import MinLen, MaxLen
 from pydantic import BaseModel, model_validator
 
+from src.schemas.base import PublishToBrokerSchema
+
 
 class BaseUserSchema(BaseModel, ABC):
     pass
@@ -27,7 +29,7 @@ class UserInfoSchema(BaseUserSchema):
     lastname: str
 
 
-class UserInfoToBrokerSchema(BaseUserSchema):
+class UserInfoToBrokerSchema(PublishToBrokerSchema):
     user_id: uuid.UUID
     firstname: str
     lastname: str

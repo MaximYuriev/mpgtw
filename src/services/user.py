@@ -1,5 +1,6 @@
 import bcrypt
 
+from ..dto.basket import CreateBasketDTO
 from ..adapters.user.broker import UserBrokerAdapter
 from ..dto.cookie import CookieDTO
 from ..dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoToBrokerDTO, UpdateUserInfoDTO, UpdateUserLoginDTO
@@ -38,6 +39,8 @@ class UserService:
             lastname=user_info.lastname,
             id=user_id
         )
+        create_basket = CreateBasketDTO(user_id)
+        await self.broker_adapter.publish_create_basket(create_basket)
         await self.broker_adapter.publish_create_user_info(user_info_to_broker)
 
     async def validate_user(self, user_login: UserLoginDTO) -> UserDTO:
