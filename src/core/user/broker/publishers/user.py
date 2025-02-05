@@ -32,7 +32,7 @@ class UserPublisher:
 
     async def publish_create_basket(self, create_basket: CreateBasketDTO) -> None:
         exchange, queue = await self._prepare_to_publish(self._CREATE_USER_BASKET_QUEUE_NAME)
-        basket_schema = CreateBasketBrokerSchema.model_validate(create_basket)
+        basket_schema = CreateBasketBrokerSchema.model_validate(create_basket, from_attributes=True)
         await self._publish(exchange, queue, basket_schema)
 
     async def _prepare_to_publish(self, queue_name: str) -> tuple[RobustExchange, RobustQueue]:
