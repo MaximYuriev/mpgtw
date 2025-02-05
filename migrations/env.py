@@ -4,10 +4,10 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from config import db_url
-from src.models.base import Base
-from src.models.user import UserModel, RoleModel
-from src.models.token import RefreshTokenModel
+from src.main import config as app_config
+from src.core.commons.model import Base
+from src.core.user.models.token import RefreshTokenModel
+from src.core.user.models.user import UserModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,7 +18,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", db_url + "?async_fallback=True")
+config.set_main_option("sqlalchemy.url", app_config.postgres.db_url + "?async_fallback=True")
 
 # add your model's MetaData object here
 # for 'autogenerate' support
