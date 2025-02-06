@@ -1,5 +1,6 @@
 from typing import AsyncIterable
 
+from aiohttp import ClientSession
 from dishka import Provider, from_context, Scope, provide
 from faststream.rabbit import RabbitBroker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker, AsyncSession
@@ -10,8 +11,10 @@ from src.core.user.broker.publishers.user import UserPublisher
 from src.core.user.interfaces.publishers.user import IUserPublisher
 from src.core.user.interfaces.repositories.token import ITokenRepository
 from src.core.user.interfaces.repositories.user import IUserRepository
+from src.core.user.interfaces.senders.user import BaseUserHttpSender
 from src.core.user.repositories.token import TokenRepository
 from src.core.user.repositories.user import UserRepository
+from src.core.user.senders.user import UserServiceHttpSender
 from src.core.user.services.auth import AuthService
 from src.core.user.services.user import UserService
 
@@ -42,11 +45,19 @@ class RMQProvider(Provider):
             yield broker
 
 
+class AiohttpProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    async def get_http_connection(self) -> AsyncIterable[ClientSession]:
+        async with ClientSession() as session:
+            yield session
+
+
 class UserProvider(Provider):
     scope = Scope.REQUEST
 
     user_repository = provide(UserRepository, provides=IUserRepository)
     user_publisher = provide(UserPublisher, provides=IUserPublisher)
+    user_sender = provide(UserServiceHttpSender, provides=BaseUserHttpSender)
     user_service = provide(UserService)
     user_service_adapter = provide(UserAdapter)
 

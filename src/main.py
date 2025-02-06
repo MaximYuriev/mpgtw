@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from src.api.user.routers.auth import auth_router
 from src.api.user.routers.user import user_router
 from src.config import Config
-from src.ioc import UserProvider, AuthProvider, SQLAlchemyProvider, RMQProvider
+from src.ioc import UserProvider, AuthProvider, SQLAlchemyProvider, RMQProvider, AiohttpProvider
 
 config = Config()
 container = make_async_container(
@@ -13,6 +13,7 @@ container = make_async_container(
     AuthProvider(),
     SQLAlchemyProvider(),
     RMQProvider(),
+    AiohttpProvider(),
     context={Config: config},
 )
 app = FastAPI(title="API Gateway")

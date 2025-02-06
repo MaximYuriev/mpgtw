@@ -7,15 +7,19 @@ from src.core.user.dto.user import UserLoginDTO, UserDTO, UserInfoDTO, UserInfoT
 from src.core.user.exceptions.user import LoginIsNotUniqueException, LoginAuthException, PasswordAuthException
 from src.core.user.interfaces.publishers.user import IUserPublisher
 from src.core.user.interfaces.repositories.user import IUserRepository
-from src.core.user.senders.user import UserServiceHttpSender
+from src.core.user.interfaces.senders.user import BaseUserHttpSender
 
 
 class UserService:
-    http_sender = UserServiceHttpSender
-
-    def __init__(self, repository: IUserRepository, publisher: IUserPublisher):
+    def __init__(
+            self,
+            repository: IUserRepository,
+            publisher: IUserPublisher,
+            http_sender: BaseUserHttpSender,
+    ):
         self._repository = repository
         self._publisher = publisher
+        self._sender = http_sender
 
     async def _validate_login(self, login: str) -> None:
         user = await self._repository.get_user_by_login(login)
@@ -53,7 +57,7 @@ class UserService:
         return founded_user
 
     async def get_user_info(self, authorization_cookies: CookieDTO) -> UserInfoDTO:
-        return await self.http_sender.get_user_info(authorization_cookies)
+        return await self._sender.get_user_info(authorization_cookies)
 
     async def update_user_info(self, updated_user_info: UpdateUserInfoDTO) -> None:
         await self._publisher.publish_update_user_info(updated_user_info)
