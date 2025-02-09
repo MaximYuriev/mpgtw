@@ -5,9 +5,13 @@ from dishka import Provider, from_context, Scope, provide
 from faststream.rabbit import RabbitBroker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker, AsyncSession
 
+from src.api.basket.adapter import BasketServiceAdapter
 from src.api.product.adapter import ProductServiceAdapter
 from src.api.user.adapters.user import UserAdapter
 from src.config import Config
+from src.core.basket.interfaces.sender import BaseBasketHttpSender
+from src.core.basket.sender import BasketHttpSender
+from src.core.basket.service import BasketService
 from src.core.product.interfaces.sender import BaseProductHttpSender
 from src.core.product.sender import ProductHttpSender
 from src.core.product.service import ProductService
@@ -79,3 +83,11 @@ class ProductProvider(Provider):
     product_sender = provide(ProductHttpSender, provides=BaseProductHttpSender)
     product_service = provide(ProductService)
     product_adapter = provide(ProductServiceAdapter)
+
+
+class BasketProvider(Provider):
+    scope = Scope.REQUEST
+
+    basket_sender = provide(BasketHttpSender, provides=BaseBasketHttpSender)
+    basket_service = provide(BasketService)
+    basket_adapter = provide(BasketServiceAdapter)

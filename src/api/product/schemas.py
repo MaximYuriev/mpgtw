@@ -5,7 +5,7 @@ from src.api.product.utils.category import Category
 
 class BaseProductSchema(BaseModel):
     name: str
-    category: Category
+    category: str
     quantity: int
     price: int
 
@@ -20,6 +20,6 @@ class CreateProductSchema(BaseProductSchema):
 
 class UpdateProductSchema(BaseProductSchema):
     name: str | None = None
-    category: Category | None = None
+    category: str | None = None
     quantity: int | None = None
     price: int | None = None
