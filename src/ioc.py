@@ -5,8 +5,12 @@ from dishka import Provider, from_context, Scope, provide
 from faststream.rabbit import RabbitBroker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker, AsyncSession
 
+from src.api.product.adapter import ProductServiceAdapter
 from src.api.user.adapters.user import UserAdapter
 from src.config import Config
+from src.core.product.interfaces.sender import BaseProductHttpSender
+from src.core.product.sender import ProductHttpSender
+from src.core.product.service import ProductService
 from src.core.user.broker.publishers.user import UserPublisher
 from src.core.user.interfaces.publishers.user import IUserPublisher
 from src.core.user.interfaces.repositories.token import ITokenRepository
@@ -66,4 +70,12 @@ class AuthProvider(Provider):
     scope = Scope.REQUEST
 
     auth_repository = provide(TokenRepository, provides=ITokenRepository)
-    product_service = provide(AuthService)
+    auth_service = provide(AuthService)
+
+
+class ProductProvider(Provider):
+    scope = Scope.REQUEST
+
+    product_sender = provide(ProductHttpSender, provides=BaseProductHttpSender)
+    product_service = provide(ProductService)
+    product_adapter = provide(ProductServiceAdapter)
