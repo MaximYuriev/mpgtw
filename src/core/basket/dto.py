@@ -28,3 +28,8 @@ class AddProductOnBasketDTO:
 class UpdateProductOnBasketDTO:
     quantity_on_basket: int | None = None
     marked_for_order: bool | None = None
+
+
+@dataclass
+class ProductOnBasketFilter:
+    with_products_marked_for_order: bool | None

@@ -1,6 +1,7 @@
 from aiohttp import ClientSession
 
-from src.core.basket.dto import UpdateProductOnBasketDTO, AddProductOnBasketDTO, BasketDTO, ProductOnBasket
+from src.core.basket.dto import UpdateProductOnBasketDTO, AddProductOnBasketDTO, BasketDTO, ProductOnBasket, \
+    ProductOnBasketFilter
 from src.core.basket.interfaces.sender import BaseBasketHttpSender
 from src.core.commons.dto.cookie import CookieDTO
 from src.core.commons.exceptions.sender import HttpSenderRequestException
@@ -10,10 +11,12 @@ class BasketHttpSender(BaseBasketHttpSender):
     def __init__(self, session: ClientSession):
         self._session = session
 
-    async def get_basket(self, cookie: CookieDTO) -> BasketDTO:
+    async def get_basket(self, cookie: CookieDTO, filters: ProductOnBasketFilter) -> BasketDTO:
+        filters = self._validate_filters(filters)
         response = await self._session.get(
             f'{self._GET_BASKET_URL}',
             cookies=((cookie.key, cookie.value),),
+            params=filters,
         )
         response_body = await response.json()
         basket_service_response = self._validate_responses(response_body)
@@ -24,6 +27,14 @@ class BasketHttpSender(BaseBasketHttpSender):
             products_on_basket=[ProductOnBasket(**product) for product in
                                 basket_service_response.data["products_on_basket"]]
         )
+
+    @staticmethod
+    def _validate_filters(filters: ProductOnBasketFilter) -> dict[str, str]:
+        filters_data = {}
+        for key, value in filters.__dict__.items():
+            if value is not None:
+                filters_data[key] = str(value)
+        return filters_data
 
     async def add_product_on_basket(self, added_product: AddProductOnBasketDTO, cookie: CookieDTO) -> None:
         response = await self._session.post(

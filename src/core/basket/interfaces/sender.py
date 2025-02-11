@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.core.basket.dto import BasketDTO, AddProductOnBasketDTO, UpdateProductOnBasketDTO
+from src.core.basket.dto import BasketDTO, AddProductOnBasketDTO, UpdateProductOnBasketDTO, ProductOnBasketFilter
 from src.core.commons.dto.cookie import CookieDTO
 from src.core.commons.sender import BaseHttpSender
 
@@ -13,7 +13,7 @@ class BaseBasketHttpSender(BaseHttpSender, ABC):
     _DELETE_PRODUCT_FROM_BASKET_URL = f'{_BASKET_SERVICE_URL}/basket'
 
     @abstractmethod
-    async def get_basket(self, cookie: CookieDTO) -> BasketDTO:
+    async def get_basket(self, cookie: CookieDTO, filters: ProductOnBasketFilter) -> BasketDTO:
         ...
 
     @abstractmethod
